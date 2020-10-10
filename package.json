@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-auto-sanitize": "^1.1.0",
+    "express-validator": "^6.6.1",
+    "mariadb": "^2.4.2",
+    "swagger-jsdoc": "^4.2.3",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {},
+  "description": ""
+}
