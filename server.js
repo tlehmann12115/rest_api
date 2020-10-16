@@ -89,8 +89,8 @@ app.get('/say/:keyword', (req,res) => {
   axios.get('https://sqp58craj1.execute-api.us-east-2.amazonaws.com/prod/' + req.params.keyword)
     .then(function (response) {
       // handle success
-      res.send(response.data.body);
-      console.log(response);
+      res.send(response.data);
+      console.log(response.data);
     })
     .catch(function (error) {
       // handle error
