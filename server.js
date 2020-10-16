@@ -7,24 +7,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(bodyParser.json()); 
 //app.use(bodyParser.raw());
 const port = 3000;
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
-//const swaggerJsdoc = require('swagger-jsdoc');
-//const swaggerUi = require('swagger-ui-express');
-
-//const options = {
-//   swaggerDefinition: {
-//      info: {
-//         title: 'API',
-//	 version: '1.0.0',
-//	 description: 'API for 6177'
-//      },
-//      host: '161.35.55.4:3000',
-//      basePath: '/',
-//   },
-//   apis: ['./server.js'],
-//}
-//const specs = swaggerJsdoc(options);
-//app.use('/docs', swaggerUi.server, swaggerUi.setup(specs));
+const options = {
+  swaggerDefinition: {
+    info: {
+      title: 'API',
+      version: '1.0.0',
+      description: 'API for 6177'
+    },
+    host: '161.35.55.4:3000',
+    basePath: '/',
+  },
+  apis: ['./server.js'],
+}
+const specs = swaggerJsdoc(options);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
@@ -36,7 +35,7 @@ const pool = mariadb.createPool({
 	connectionLimit: 5
 });
 
-app.patch('/company/update2', [check('id').isNumeric], (req,res) => {
+app.patch('/company/update2', [check('id').isNumeric()], (req,res) => {
     const errors = validationResult(req)
     console.log(req.body)
     if (errors.isEmpty()){
@@ -58,7 +57,7 @@ app.patch('/company/update2', [check('id').isNumeric], (req,res) => {
     else {res.send("ID must be a number")}
 });
 
-app.put('/company/update1', [check('id').isNumeric], (req,res) => {
+app.put('/company/update1', [check('id').isNumeric()], (req,res) => {
      const errors = validationResult(req)
      console.log(req.body)
      if (errors.isEmpty()){
@@ -83,6 +82,22 @@ app.put('/company/update1', [check('id').isNumeric], (req,res) => {
      else {res.send("ID must be a number")} 
 });
 
+app.get('/say/:keyword', (req,res) => {
+  const axios = require('axios');
+  // Make a request for a user with a given ID
+  //axios.get('?name=' + req.params.name)
+  axios.get('https://sqp58craj1.execute-api.us-east-2.amazonaws.com/prod/' + req.params.keyword)
+    .then(function (response) {
+      // handle success
+      res.send(response.data.body);
+      console.log(response);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })   
+}); 
+
 app.get('/company_names', (req,res) => {
   
   pool.getConnection()
@@ -100,6 +115,7 @@ app.get('/company_names', (req,res) => {
        //not connected
      });
 });
+
 
 app.delete('/company/remove/:id', (req,res) => {
    if (isNaN(req.params.id)){res.send("ID must be a number")}
